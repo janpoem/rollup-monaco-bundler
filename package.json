@@ -9,7 +9,6 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "private": true,
   "files": ["dist", "nls", "src"],
   "bin": {
     "download-monaco": "dist/cli/download-monaco.cjs"
