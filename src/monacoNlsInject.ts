@@ -1,24 +1,26 @@
-import * as fs from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { relative, resolve, sep } from 'node:path';
 import type { Plugin } from 'rollup';
-import * as semver from 'semver';
+import { gt } from 'semver';
 
 export type MonacoNlsInjectPluginOptions = {
   entry: string;
   version: string;
 };
 
+//  > '0.50.0' => 'nls-0.51.0.js'
+// <= '0.50.0' => 'nls-0.50.0.js'
 const baseVersion = '0.50.0';
 
 export default function monacoNlsInject({
   entry,
   version,
 }: MonacoNlsInjectPluginOptions): Plugin {
-  const nlsFile = semver.gt(baseVersion, version) ? 'nls-0.50.0.js' : 'nls.js';
+  const nlsFile = gt(version, baseVersion) ? 'nls-0.51.0.js' : 'nls-0.50.0.js';
 
-  const nlsSource = fs
-    .readFileSync(resolve(__dirname, `../nls/${nlsFile}`))
-    .toString('utf8');
+  const nlsSource = readFileSync(
+    resolve(__dirname, `../nls/${nlsFile}`),
+  ).toString('utf8');
 
   return {
     name: 'monaco-nls-inject',
