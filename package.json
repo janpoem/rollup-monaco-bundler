@@ -1,6 +1,6 @@
 {
   "name": "rollup-monaco-bundler",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A monaco-editor umd bundler based on Rollup. Provides dynamic runtime nls injection.",
   "author": "Jiankai Zeng <janpoem@163.com>",
   "license": "MIT",
@@ -48,25 +48,22 @@
   "dependencies": {
     "rollup": "^4.34.9",
     "rollup-plugin-styles": "^4.0.0",
-    "rollup-plugin-swc3": "^0.12.1",
+    "rollup-plugin-swc3": "^0.12.1"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@biomejs/biome": "latest",
+    "typescript": "^5",
+    "rollup-plugin-dts": "^6.1.1",
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-alias": "^5.1.1",
+    "@types/semver": "^7.5.8",
     "glob": "^11.0.1",
     "filesize": "^10.1.6",
     "tar": "^7.4.3",
     "ansi-colors": "^4.1.3",
     "@zenstone/ts-utils": "^0.0.7",
     "semver": "^7.7.1"
-  },
-  "devDependencies": {
-    "@types/bun": "latest",
-    "@biomejs/biome": "latest",
-    "rollup-plugin-dts": "^6.1.1",
-    "@rollup/plugin-commonjs": "^28.0.2",
-    "@rollup/plugin-node-resolve": "^16.0.0",
-    "@rollup/plugin-alias": "^5.1.1",
-    "@types/semver": "^7.5.8"
-  },
-  "peerDependencies": {
-    "rollup": "^4",
-    "typescript": "^5"
   }
 }
