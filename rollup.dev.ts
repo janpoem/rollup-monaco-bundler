@@ -1,17 +1,33 @@
+import { notEmptyStr } from '@zenstone/ts-utils/string';
+import { parseArgs } from 'node:util';
 import { RollupMonacoBundler } from './src';
 
-// const version = '0.50.0';
-const version = '0.52.2';
+const latestVersion = '0.52.2';
 
-const bundler = new RollupMonacoBundler({
-  srcDir: `tmp/${version}`,
-  outputDir: `tmp_dist/${version}`,
-  // onSwcOptions: (opts) => ({
-  //   ...opts,
-  //   minify: false,
-  // }),
+function getConfig(ver?: string | boolean) {
+  const version = notEmptyStr(ver) ? ver : latestVersion;
+
+  const bundler = new RollupMonacoBundler({
+    srcDir: `tmp/${version}`,
+    outputDir: `tmp_dist/${version}`,
+    // onSwcOptions: (opts) => ({
+    //   ...opts,
+    //   minify: false,
+    // }),
+  });
+
+  return bundler.entries.map(bundler.makeEntryOptions);
+}
+
+const { values } = parseArgs({
+  args: process.argv,
+  options: {
+    buildVersion: {
+      type: 'string',
+    },
+  },
+  strict: false,
+  allowPositionals: true,
 });
 
-const opts = bundler.entries.map(bundler.makeEntryOptions);
-
-export default opts;
+export default getConfig(values.buildVersion);
