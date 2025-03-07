@@ -1,0 +1,71 @@
+{
+  "name": "rollup-monaco-bundler",
+  "version": "1.0.0",
+  "description": "A monaco-editor umd bundler based on Rollup. Provides dynamic runtime nls injection.",
+  "author": "Jiankai Zeng <janpoem@163.com>",
+  "license": "MIT",
+  "keywords": ["monaco-editor", "rollup", "bundler", "nls", "locale"],
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "private": true,
+  "files": ["dist", "nls", "src"],
+  "bin": {
+    "download-monaco": "dist/cli/download-monaco.cjs"
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "default": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+      },
+      "require": {
+        "default": "./dist/index.cjs",
+        "types": "./dist/index.d.ts"
+      }
+    },
+    "./cli/download-monaco": {
+      "import": {
+        "default": "./dist/cli/download-monaco.js",
+        "types": "./dist/cli/download-monaco.d.ts"
+      },
+      "require": {
+        "default": "./dist/cli/download-monaco.cjs",
+        "types": "./dist/cli/download-monaco.d.ts"
+      }
+    }
+  },
+  "scripts": {
+    "lint": "biome lint --error-on-warnings ./src",
+    "ts-check": "bunx --bun tsc --noEmit",
+    "test": "bun test --coverage",
+    "build": "bunx --bun rollup -c rollup.config.ts",
+    "dev:download": "bun ./src/cli/download-monaco.ts -o",
+    "dev:download-0.50.0": "bun ./src/cli/download-monaco.ts -o -v 0.50.0",
+    "dev:build": "bunx --bun rollup -c rollup.dev.ts"
+  },
+  "dependencies": {
+    "rollup": "^4.34.9",
+    "rollup-plugin-styles": "^4.0.0",
+    "rollup-plugin-swc3": "^0.12.1",
+    "glob": "^11.0.1",
+    "filesize": "^10.1.6",
+    "tar": "^7.4.3",
+    "ansi-colors": "^4.1.3",
+    "@zenstone/ts-utils": "^0.0.7",
+    "semver": "^7.7.1"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@biomejs/biome": "latest",
+    "rollup-plugin-dts": "^6.1.1",
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@types/semver": "^7.5.8"
+  },
+  "peerDependencies": {
+    "rollup": "^4",
+    "typescript": "^5"
+  }
+}
