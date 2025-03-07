@@ -1,3 +1,4 @@
+import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { globSync } from 'glob';
@@ -43,6 +44,9 @@ const options: RollupOptions[] = [
     plugins: [
       // @ts-ignore
       rmdir(outputDir),
+      alias({
+        entries: [{ find: 'fs', replacement: 'node:fs' }],
+      }),
       swc({
         include: /\.[mc]?[jt]sx?$/,
         exclude: /node_modules/,
@@ -99,7 +103,6 @@ for (const entry of cliEntries) {
         jsc: {
           target: 'es2022',
         },
-        minify: true,
       }),
       nodeResolve({}),
       commonjs({
