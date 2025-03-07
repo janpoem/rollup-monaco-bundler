@@ -3,7 +3,13 @@ import { fetchDownload } from '@zenstone/ts-utils/fetch-download';
 import { notEmptyStr } from '@zenstone/ts-utils/string';
 import * as ansiColors from 'ansi-colors';
 import { filesize } from 'filesize';
-import * as fs from 'node:fs';
+import {
+  existsSync,
+  lstatSync,
+  mkdirSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { isAbsolute, join, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import { ansiProgressBar, fetchNpmPackage, progressBar } from '../utils';
@@ -24,8 +30,8 @@ export default async function downloadMonaco({
   let dirExists = false;
 
   // 下载目录检查
-  if (fs.existsSync(downloadDir)) {
-    const st = fs.lstatSync(downloadDir);
+  if (existsSync(downloadDir)) {
+    const st = lstatSync(downloadDir);
     if (st.isSymbolicLink()) {
       throw new Error('Download dir cannot be symbolic link');
     }
@@ -41,8 +47,8 @@ export default async function downloadMonaco({
   // 基于 package 信息中明确的版本号，去检查本地是否已经存在相关的版本号
   const versionDir = join(downloadDir, pkg.version);
 
-  if (fs.existsSync(versionDir)) {
-    const st = fs.lstatSync(downloadDir);
+  if (existsSync(versionDir)) {
+    const st = lstatSync(downloadDir);
     if (st.isSymbolicLink()) {
       throw new Error(`Version "${pkg.version}" exists but it's symbolic link`);
     }
@@ -53,7 +59,7 @@ export default async function downloadMonaco({
     }
     if (st.isDirectory()) {
       if (overwrite) {
-        fs.rmSync(versionDir, { recursive: true });
+        rmSync(versionDir, { recursive: true });
       } else {
         throw new Error(`Version "${pkg.version}" exists`);
       }
@@ -89,16 +95,16 @@ export default async function downloadMonaco({
   const tgzPath = join(downloadDir, `${pkg.version}.tgz`);
 
   if (!dirExists) {
-    fs.mkdirSync(downloadDir, { recursive: true });
+    mkdirSync(downloadDir, { recursive: true });
   }
-  fs.writeFileSync(tgzPath, task.chunks);
+  writeFileSync(tgzPath, task.chunks);
 
   console.log(`Unzipping ${naming(tgzFilename)}...`);
-  fs.mkdirSync(versionDir, { recursive: true });
+  mkdirSync(versionDir, { recursive: true });
   await _extract(tgzPath, versionDir);
 
   console.log(`Deleting ${naming(tgzFilename)}...`);
-  fs.rmSync(tgzPath);
+  rmSync(tgzPath);
 }
 
 async function _extract(file: string, dir: string) {

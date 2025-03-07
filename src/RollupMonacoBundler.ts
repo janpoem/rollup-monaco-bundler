@@ -1,7 +1,7 @@
 import { isInferObj } from '@zenstone/ts-utils/object';
 import { notEmptyStr } from '@zenstone/ts-utils/string';
 import { globSync } from 'glob';
-import * as fs from 'node:fs';
+import { existsSync, lstatSync, readFileSync, rmSync, statSync } from 'node:fs';
 import { basename, extname, isAbsolute, join, resolve } from 'node:path';
 import type { InputPluginOption, OutputOptions, RollupOptions } from 'rollup';
 import stylesPlugin from 'rollup-plugin-styles';
@@ -63,14 +63,14 @@ export class RollupMonacoBundler {
         ? options.outputDir
         : resolve(process.cwd(), options.outputDir || './dist');
 
-    if (!fs.existsSync(this.#srcDir)) {
+    if (!existsSync(this.#srcDir)) {
       throw new Error('Source directory does not exist!');
     }
-    const st = fs.lstatSync(this.#srcDir);
+    const st = lstatSync(this.#srcDir);
     if (!st.isDirectory()) {
       throw new Error('Source directory path is not a directory!');
     }
-    const pkg = fs.readFileSync(join(this.#srcDir, 'package.json'), 'utf8');
+    const pkg = readFileSync(join(this.#srcDir, 'package.json'), 'utf8');
     const json = JSON.parse(pkg);
 
     if (!isInferObj<PackageInfo>(json, (it) => notEmptyStr(it.version))) {
@@ -220,6 +220,6 @@ export class RollupMonacoBundler {
 
 const rmdirPlugin = (dir: string) =>
   dir &&
-  fs.existsSync(dir) &&
-  fs.statSync(dir).isDirectory() &&
-  fs.rmSync(dir, { recursive: true });
+  existsSync(dir) &&
+  statSync(dir).isDirectory() &&
+  rmSync(dir, { recursive: true });
