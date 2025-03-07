@@ -40,6 +40,11 @@ nls 注入机制，可以兼容 vscode 的翻译。
 
 ## 使用说明
 
+示例项目：
+
+- [rollup-monaco-bundler-npm-example](https://github.com/janpoem/rollup-monaco-bundler-npm-example)
+- [rollup-monaco-bundler-bun-example](https://github.com/janpoem/rollup-monaco-bundler-bun-example)
+
 添加包：
 
 ```bash
@@ -75,7 +80,7 @@ const bundler = new RollupMonacoBundler({
 export default bundler.entries.map(bundler.makeEntryOptions);
 ```
 
-在项目根目录添加 `tsconfig.json` 文件（swc 编译需要），请根据自己编译代码时需要的环境进行定制。
+在项目根目录添加 `tsconfig.json` 文件（swc 编译需要），请根据自己编译代码时需要的环境进行调整。
 
 ```json
 {
@@ -99,3 +104,26 @@ export default bundler.entries.map(bundler.makeEntryOptions);
 }
 ```
 
+### RollupMonacoBundler 的用法
+
+```ts
+import { RollupMonacoBundler } from 'rollup-monaco-bundler';
+
+const version = '0.52.2';
+
+const bundler = new RollupMonacoBundler({
+  srcDir: `tmp/${version}`,
+  outputDir: `dist/${version}`,
+  // 生成 swc 配置时候重载默认配置
+  onSwcOptions: (opts, entry) => ({
+    ...opts,
+    minify: false,
+  }),
+  // 重载生成 css 的配置
+  onStylesOptions: (opts, entry) => ({}),
+  // 重载每一个 rollup 的 options（每一个 entry 的配置）
+  onRollupOptions: (opts, entry) => ({
+    ...opts,
+  }),
+});
+```
